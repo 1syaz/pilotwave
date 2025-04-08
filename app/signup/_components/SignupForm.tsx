@@ -17,6 +17,8 @@ import { Eye, EyeOff } from "lucide-react";
 import { CiLock, CiMail } from "react-icons/ci";
 import toast from "react-hot-toast";
 import { LuUserRound } from "react-icons/lu";
+import { useRouter } from "next/navigation";
+import { LoadingSpinner } from "@/app/_components/LoadingSpinner";
 
 const loginFormScehma = z.object({
   fullname: z.string().min(4, { message: "Name must be atleast 4 characters" }),
@@ -25,7 +27,9 @@ const loginFormScehma = z.object({
 });
 
 function SignupForm() {
-  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const form = useForm({
     resolver: zodResolver(loginFormScehma),
@@ -36,8 +40,28 @@ function SignupForm() {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof loginFormScehma>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof loginFormScehma>) => {
+    try {
+      setIsLoading(true);
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success("Account created! Login to get started");
+        router.push("/login");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.error("Network or parsing error:", error);
+      toast.error("Failed to connect to server");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleError = (errors: FieldErrors) => {
@@ -77,6 +101,7 @@ function SignupForm() {
                     <LuUserRound size={17} />
                   </span>
                   <Input
+                    disabled={isLoading}
                     placeholder="you@example.com"
                     className="pl-10"
                     {...field}
@@ -101,6 +126,7 @@ function SignupForm() {
                     <CiMail size={17} />
                   </span>
                   <Input
+                    disabled={isLoading}
                     placeholder="you@example.com"
                     className="pl-10"
                     {...field}
@@ -125,6 +151,7 @@ function SignupForm() {
                     <CiLock size={20} />
                   </span>
                   <Input
+                    disabled={isLoading}
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
                     className="placeholder:text-xs pr-10 pl-10"
@@ -148,7 +175,7 @@ function SignupForm() {
         />
         <div className="flex flex-col gap-2">
           <Button type="submit" className="w-full">
-            Create Account
+            {isLoading ? <LoadingSpinner /> : "Create Account"}
           </Button>
         </div>
       </form>

@@ -1,12 +1,12 @@
 "use client";
 
-import toast from "react-hot-toast";
 import { Button } from "./ui/button";
 import { FcGoogle } from "react-icons/fc";
+import { signIn } from "next-auth/react";
 
 function GoogleLoginButton() {
   const handleLoginWithGoogle = () => {
-    toast.success("Google login");
+    signIn("google");
   };
 
   return (

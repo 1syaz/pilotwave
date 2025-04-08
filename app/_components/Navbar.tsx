@@ -26,7 +26,7 @@ function Navbar() {
   ];
 
   return (
-    <header className="sm:px-10 px-4 p-3  w-full bg-white/80 fixed backdrop-blur-sm z-10 shadow-md shadow-gray-200/30 top-0 transition-transform duration-300">
+    <header className="sm:px-10 px-4 p-3  w-full bg-white/80 fixed backdrop-blur-md z-10 shadow-md shadow-gray-200/30 top-0 transition-transform duration-300">
       <nav className="gap-10 max-w-[80rem] w-full flex items-center justify-between mx-auto">
         <div className="flex items-center gap-10">
           <Logo iconColor="#111827" textColor="#fc350b" />

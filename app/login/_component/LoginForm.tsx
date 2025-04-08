@@ -16,6 +16,9 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { CiLock, CiMail } from "react-icons/ci";
 import toast from "react-hot-toast";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { LoadingSpinner } from "@/app/_components/LoadingSpinner";
 
 const loginFormScehma = z.object({
   email: z.string().email(),
@@ -24,6 +27,8 @@ const loginFormScehma = z.object({
 
 function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm({
     resolver: zodResolver(loginFormScehma),
@@ -33,8 +38,25 @@ function LoginForm() {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof loginFormScehma>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof loginFormScehma>) => {
+    try {
+      setIsLoading(true);
+      const response = await signIn("credentials", {
+        ...values,
+        redirect: false,
+      });
+
+      if (response!.ok) {
+        router.push("/dashboard");
+      } else {
+        toast.error(response!.error);
+      }
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleError = (errors: FieldErrors) => {
@@ -74,6 +96,7 @@ function LoginForm() {
                     <CiMail size={17} />
                   </span>
                   <Input
+                    disabled={isLoading}
                     placeholder="you@example.com"
                     className="pl-10"
                     {...field}
@@ -98,6 +121,7 @@ function LoginForm() {
                     <CiLock size={20} />
                   </span>
                   <Input
+                    disabled={isLoading}
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
                     className="placeholder:text-xs pr-10 pl-10"
@@ -121,6 +145,7 @@ function LoginForm() {
         />
         <div className="flex flex-col gap-2">
           <Button
+            disabled={isLoading}
             type="button"
             size="sm"
             variant="link"
@@ -128,8 +153,8 @@ function LoginForm() {
           >
             Forgot password?
           </Button>
-          <Button type="submit" className="w-full">
-            Sign in
+          <Button disabled={isLoading} type="submit" className="w-full">
+            {isLoading ? <LoadingSpinner /> : "Sign in"}
           </Button>
         </div>
       </form>

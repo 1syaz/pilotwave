@@ -57,14 +57,6 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild className="text-md ">
                     <SideBarLink item={item} key={item.title} />
-                    {/* <Link href={item.url} className=" w-full ">
-                      <div className={`w-full flex items-center gap-5 p-3 `}>
-                        {item.icon}
-                        <span className="text-md font-medium">
-                          {item.title}
-                        </span>
-                      </div>
-                    </Link> */}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
