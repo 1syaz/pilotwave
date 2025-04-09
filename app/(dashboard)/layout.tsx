@@ -19,6 +19,11 @@ export default async function Layout({
   children: React.ReactNode;
 }>) {
   const session = await getServerSession(authOptions);
+
+  //   if (!session) {
+  //     redirect("/login");
+  //   }
+
   return (
     <Provider session={session!}>
       <SidebarProvider>

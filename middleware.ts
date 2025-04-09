@@ -1,42 +1,30 @@
-import withAuth from "next-auth/middleware";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-export default withAuth(
-  function middleware(req) {
-    // If no token or invalid token, redirect to login
-    if (!req.nextauth.token) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
+export async function middleware(req: NextRequest) {
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-    return NextResponse.next();
-  },
-  {
-    callbacks: {
-      authorized: ({ token, req }) => {
-        const { pathname } = req.nextUrl;
+  const { pathname } = req.nextUrl;
 
-        // allow auth related routes
-        if (
-          pathname.startsWith("/api/auth") ||
-          pathname === "/login" ||
-          pathname === "/signup" ||
-          pathname === "/"
-        ) {
-          return true;
-        }
+  // Define public and auth routes
+  const publicRoutes = ["/"];
+  const authRoutes = ["/login", "/signup"];
 
-        // public
-        if (pathname === "/" || pathname.startsWith("/login")) {
-          return true;
-        }
-
-        return !!token;
-      },
-    },
+  if (token && authRoutes.includes(pathname)) {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
   }
-);
+
+  if (
+    !token &&
+    !publicRoutes.includes(pathname) &&
+    !authRoutes.includes(pathname)
+  ) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
+  return NextResponse.next();
+}
 
 export const config = {
-  //   matcher: ["/((?!_next/static|_next/image|favicon.ico|public/).*)"],
-  matcher: ["/dashboard"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

@@ -6,22 +6,22 @@ import Image from "next/image";
 import CustomSideBarTrigger from "./CustomSideBarTrigger";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+// import { useRouter } from "next/navigation";
+// import { useEffect } from "react";
 
 function DashboardNavbar() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+  const { data: session } = useSession();
+  //   const router = useRouter();
 
-  useEffect(() => {
-    if (!session) {
-      router.push("./login");
-    }
-  }, [session, router]);
+  //   useEffect(() => {
+  //     if (!session) {
+  //       router.push("./login");
+  //     }
+  //   }, [session, router]);
 
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
+  //   if (status === "loading") {
+  //     return <div>Loading...</div>;
+  //   }
 
   return (
     <header className="fixed border-b top-0 shadow-md shadow-gray-200/30 bg-white w-screen left-0 z-10 border-foreground/10 lg:py-4 py-3 lg:px-6 px-3 flex items-center justify-between ">

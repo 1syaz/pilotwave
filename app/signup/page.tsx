@@ -20,11 +20,11 @@ async function page() {
     },
   ];
 
-  const session = await getServerSession(authOptions);
+  //   const session = await getServerSession(authOptions);
 
-  if (session) {
-    redirect("/dashboard");
-  }
+  //   if (session) {
+  //     redirect("/dashboard");
+  //   }
 
   return (
     <div className="grid md:grid-cols-2 grid-cols-1  h-screen ">

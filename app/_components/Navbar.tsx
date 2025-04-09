@@ -41,12 +41,12 @@ function Navbar() {
           </ul>
         </div>
         <div className="lg:flex hidden items-center gap-3">
-          <Button variant="ghost">
-            <Link href="/login">Log In</Link>
-          </Button>
-          <Button>
-            <Link href="/signup">Sign Up</Link>
-          </Button>
+          <Link href="/login">
+            <Button variant="ghost">Log In</Button>
+          </Link>
+          <Link href="/signup">
+            <Button>Sign Up</Button>
+          </Link>
         </div>
         <div className="lg:hidden items-center gap-3">
           <div

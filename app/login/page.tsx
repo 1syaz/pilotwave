@@ -2,9 +2,6 @@ import { MdScheduleSend } from "react-icons/md";
 import AuthSideInfo from "../_components/AuthSideInfo";
 import { GrDocumentPerformance } from "react-icons/gr";
 import LoginFormSection from "./_component/LoginFormSection";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { redirect } from "next/navigation";
 
 async function page() {
   const authFeaturesLogin = [
@@ -20,11 +17,11 @@ async function page() {
     },
   ];
 
-  const session = await getServerSession(authOptions);
+  //   const session = await getServerSession(authOptions);
 
-  if (session) {
-    redirect("/dashboard");
-  }
+  //   if (session) {
+  //     redirect("/dashboard");
+  //   }
 
   return (
     <div className="grid md:grid-cols-2 grid-cols-1  h-screen ">
