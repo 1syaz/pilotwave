@@ -2,9 +2,6 @@ import { MdDashboard } from "react-icons/md";
 import AuthSideInfo from "../_components/AuthSideInfo";
 import { FaMessage } from "react-icons/fa6";
 import SignupFormSection from "./_components/SignupFormSection";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { redirect } from "next/navigation";
 
 async function page() {
   const authFeaturesSignup = [
