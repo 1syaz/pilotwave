@@ -17,14 +17,8 @@ async function page() {
     },
   ];
 
-  //   const session = await getServerSession(authOptions);
-
-  //   if (session) {
-  //     redirect("/dashboard");
-  //   }
-
   return (
-    <div className="grid md:grid-cols-2 grid-cols-1  h-screen ">
+    <div className="grid md:grid-cols-2 grid-cols-1  min-h-screen ">
       <AuthSideInfo
         features={authFeaturesSignup}
         heading={"Join Thousands of Social Media Managers"}

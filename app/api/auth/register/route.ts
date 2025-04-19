@@ -14,9 +14,9 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const existedUser = await User.findOne({ email });
+  const existingUser = await User.findOne({ email });
 
-  if (existedUser) {
+  if (existingUser) {
     return new NextResponse(
       JSON.stringify({
         message: "An account already exists with this email.",
@@ -29,6 +29,9 @@ export async function POST(request: NextRequest) {
     fullname,
     email,
     password,
+    profileImage:
+      "https://stock.adobe.com/search?k=%22default+profile+picture%22",
+    connectedAccounts: [],
   });
 
   if (!user) {
@@ -38,5 +41,13 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  return NextResponse.json(user);
+  return new NextResponse(
+    JSON.stringify({
+      message: "User registered successfully.",
+    }),
+    {
+      status: 201,
+      headers: { "Content-Type": "application/json" },
+    }
+  );
 }

@@ -10,26 +10,33 @@ import {
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { useState } from "react";
+import { ControllerRenderProps } from "react-hook-form";
 
-function SheduleComponent() {
-  const [date, setDate] = useState<Date>();
+import { FormSchema } from "./EditOrCreatePostDialog";
+import { z } from "zod";
 
+type FormSchema = z.infer<typeof FormSchema>;
+
+interface ISheduleComponentProps {
+  field: ControllerRenderProps<FormSchema, "schedule">;
+  isLoading: boolean;
+}
+
+function SheduleComponent({ field, isLoading }: ISheduleComponentProps) {
   return (
     <div className="flex flex-col gap-2 w-full ">
-      <h4 className="text-foreground/80 font-medium text-sm">Schedule</h4>
       <Popover>
         <PopoverTrigger asChild>
           <Button
             variant={"outline"}
             className={cn(
               "w-full justify-start text-foreground/70 border border-foreground/40 text-left font-normal",
-              !date && "text-muted-foreground"
+              !field.value && "text-muted-foreground"
             )}
           >
             <CalendarIcon />
-            {date ? (
-              format(date, "PPP")
+            {field.value ? (
+              format(field.value, "PPP")
             ) : (
               <span className="text-foreground/70 ">Pick a date</span>
             )}
@@ -37,14 +44,16 @@ function SheduleComponent() {
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <Calendar
+            disabled={isLoading}
             mode="single"
-            selected={date}
-            onSelect={setDate}
+            selected={field.value}
+            hidden={{ before: new Date() }}
+            onSelect={(date) => field.onChange(date)}
             className="bg-white border-foreground/20 shadow-sm rounded-lg"
           />
         </PopoverContent>
       </Popover>
-      <p className="text-xs text-foreground/60">Leave empty to post now</p>
+      {/* <p className="text-xs text-foreground/60">Leave empty to post now</p> */}
     </div>
   );
 }

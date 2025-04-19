@@ -2,7 +2,7 @@
 
 import { Button } from "@/app/_components/ui/button";
 import { Dialog, DialogTrigger } from "@/app/_components/ui/dialog";
-import dynamic from "next/dynamic";
+// import dynamic from "next/dynamic";
 import { FaInstagram, FaLinkedin, FaXTwitter } from "react-icons/fa6";
 import { SlSocialFacebook } from "react-icons/sl";
 
@@ -15,9 +15,12 @@ interface IUpcomingPostEditPanelProps {
   date: string;
 }
 
-const EditCreatePostDialog = dynamic(() => import("./EditCreatePostDialog"), {
-  ssr: false,
-});
+// const EditOrCreatePostDialog = dynamic(
+//   () => import("./EditOrCreatePostDialog"),
+//   {
+//     ssr: false,
+//   }
+// );
 
 function UpcomingPostEditPanel(props: IUpcomingPostEditPanelProps) {
   const { platform } = props;
@@ -74,7 +77,7 @@ function UpcomingPostEditPanel(props: IUpcomingPostEditPanelProps) {
             Edit
           </Button>
         </DialogTrigger>
-        <EditCreatePostDialog title="Edit Scheduled Post" {...props} />
+        {/* <EditOrCreatePostDialog title="Edit Scheduled Post" {...props} /> */}
       </Dialog>
     </div>
   );

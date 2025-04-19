@@ -24,7 +24,7 @@ async function page() {
   //   }
 
   return (
-    <div className="grid md:grid-cols-2 grid-cols-1  h-screen ">
+    <div className="grid md:grid-cols-2 grid-cols-1  min-h-screen ">
       <AuthSideInfo
         features={authFeaturesLogin}
         heading={"Manage All Your Social Media in One Place"}

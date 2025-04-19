@@ -8,6 +8,11 @@ import React, {
   ChangeEvent,
   DragEvent,
 } from "react";
+import { ControllerRenderProps } from "react-hook-form";
+import { z } from "zod";
+import { FormSchema } from "./EditOrCreatePostDialog";
+
+type Form = z.infer<typeof FormSchema>;
 
 interface FileUploadComponentProps {
   maxSizeMB?: number;
@@ -16,6 +21,7 @@ interface FileUploadComponentProps {
   existingFileUrl?: string;
   existingFileName?: string;
   existingFileType?: "image" | "video";
+  field: ControllerRenderProps<Form, "media">;
 }
 
 const FileUploadComponent: React.FC<FileUploadComponentProps> = ({
@@ -25,8 +31,8 @@ const FileUploadComponent: React.FC<FileUploadComponentProps> = ({
   existingFileUrl = "",
   existingFileName = "",
   existingFileType = "image",
+  field,
 }) => {
-  const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -38,8 +44,15 @@ const FileUploadComponent: React.FC<FileUploadComponentProps> = ({
     }
   }, [existingFileUrl]);
 
+  useEffect(() => {
+    if (!field.value) {
+      setPreview(null);
+    }
+  }, [field.value]);
+
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] || null;
+
     handleFile(selectedFile);
   };
 
@@ -52,15 +65,16 @@ const FileUploadComponent: React.FC<FileUploadComponentProps> = ({
       return;
     }
 
-    setFile(selectedFile);
+    field.onChange(selectedFile);
 
     // Create preview URL
-    const fileUrl = URL.createObjectURL(selectedFile);
+    const fileUrl = URL.createObjectURL(field.value ?? selectedFile);
+    console.log("file url", fileUrl);
     setPreview(fileUrl);
 
     // Call the callback if provided
     if (onFileChange) {
-      onFileChange(selectedFile);
+      onFileChange(field.value!);
     }
   };
 
@@ -91,7 +105,7 @@ const FileUploadComponent: React.FC<FileUploadComponentProps> = ({
 
   const clearFile = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setFile(null);
+    field.onChange(null);
     setPreview(null);
 
     if (onFileChange) {
@@ -108,11 +122,14 @@ const FileUploadComponent: React.FC<FileUploadComponentProps> = ({
     if (!preview) return null;
 
     // Check if we have a new file or using the existing one
-    const fileType = file ? file.type.split("/")[0] : existingFileType;
+    // const fileType = file ? file.type.split("/")[0] : existingFileType;
+    const fileType = field.value
+      ? field.value.type.split("/")[0]
+      : existingFileType;
 
     if (fileType === "image") {
       return (
-        <div className="relative w-full h-48 bg-gray-100 rounded-lg overflow-hidden">
+        <div className="relative w-full h-36 bg-gray-100 rounded-lg overflow-hidden">
           <Image
             src={preview}
             alt="Preview"
@@ -173,11 +190,13 @@ const FileUploadComponent: React.FC<FileUploadComponentProps> = ({
                 <div className="mt-2 flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-gray-900 truncate max-w-xs">
-                      {file ? file.name : existingFileName || "Current file"}
+                      {field.value
+                        ? field.value.name
+                        : existingFileName || "Current file"}
                     </p>
                     <p className="text-xs text-gray-500">
-                      {file
-                        ? `${(file.size / (1024 * 1024)).toFixed(2)} MB`
+                      {field.value
+                        ? `${(field.value.size / (1024 * 1024)).toFixed(2)} MB`
                         : "Existing file"}
                     </p>
                   </div>

@@ -37,6 +37,7 @@ export const authOptions: NextAuthOptions = {
             id: user._id.toString(),
             email: user.email,
             name: user.fullname,
+            profileImage: user.profileImage,
           };
         } catch (error) {
           throw error;
@@ -58,12 +59,23 @@ export const authOptions: NextAuthOptions = {
 
         if (!user) {
           try {
-            await User.create({
+            const user = await User.create({
               googleId: profile?.sub,
               fullname: profile?.name,
               email: profile?.email,
               profileImage: (profile as GoogleProfile).picture,
+              connectedAccounts: [],
             });
+
+            console.log("Created user:", user);
+            console.log("ConnectedAccounts array:", user.connectedAccounts);
+
+            if (
+              !user.connectedAccounts ||
+              !Array.isArray(user.connectedAccounts)
+            ) {
+              console.warn("ConnectedAccounts not initialized properly");
+            }
           } catch (error) {
             console.log(error);
             throw new Error("Something went wrong while creating User.");
@@ -75,6 +87,8 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
       }
 
       return token;

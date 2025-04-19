@@ -1,4 +1,3 @@
-// import { GetStaticProps } from "next";
 import FeaturesSection from "./_components/FeaturesSection";
 import Footer from "./_components/Footer";
 import HeroSection from "./_components/HeroSection";
@@ -20,10 +19,3 @@ export default function Home() {
     </div>
   );
 }
-
-// export const getStaticProps: GetStaticProps = async () => {
-//   return {
-//     props: {},
-//     // revalidate: 60,
-//   };
-// };

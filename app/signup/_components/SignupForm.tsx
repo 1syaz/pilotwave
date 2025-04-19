@@ -102,7 +102,7 @@ function SignupForm() {
                   </span>
                   <Input
                     disabled={isLoading}
-                    placeholder="you@example.com"
+                    placeholder="Jhon doe"
                     className="pl-10"
                     {...field}
                   />

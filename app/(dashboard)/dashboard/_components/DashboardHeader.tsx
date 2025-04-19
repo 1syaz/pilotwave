@@ -3,7 +3,7 @@
 import { Button } from "@/app/_components/ui/button";
 import SectionHeading from "../../_components/SectionHeading";
 import { Dialog, DialogTrigger } from "@/app/_components/ui/dialog";
-import EditCreatePostDialog from "./EditCreatePostDialog";
+import EditOrCreatePostDialog from "./EditOrCreatePostDialog";
 
 function DashboardHeader() {
   return (
@@ -16,7 +16,7 @@ function DashboardHeader() {
         <DialogTrigger asChild>
           <Button>Create Post</Button>
         </DialogTrigger>
-        <EditCreatePostDialog title="Create Post" />
+        <EditOrCreatePostDialog title="Create Post" />
       </Dialog>
     </section>
   );

@@ -9,22 +9,42 @@ export const zUserSchema = z.object({
   password: z.string().min(6, "Password is required"),
 });
 
-interface IUser extends Document {
+export interface IConnectedAccounts {
+  provider: ("instagram" | "facebook" | "x" | "linkedin")[];
+  author: string;
+  expiresIn: number;
+}
+
+export interface IUser extends Document {
   _id: Types.ObjectId;
   fullname: string;
   email: string;
   password?: string;
   profileImage?: string;
   googleId?: string;
+  connectedAccounts: IConnectedAccounts[];
   isPasswordCorrect: (arg: string) => Promise<boolean>;
 }
+
+const connectedAccountSchema = new Schema(
+  {
+    provider: { type: String, required: true },
+    author: { type: String, required: true },
+    expiresIn: { type: Number, required: true },
+  },
+  { _id: false }
+);
 
 const userSchema = new Schema<IUser>(
   {
     fullname: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: false },
-    googleId: { type: String, required: false, unique: true },
+    googleId: { type: String, required: false },
+    connectedAccounts: {
+      type: [connectedAccountSchema],
+      default: [],
+    },
     profileImage: { type: String },
   },
   { timestamps: true }
